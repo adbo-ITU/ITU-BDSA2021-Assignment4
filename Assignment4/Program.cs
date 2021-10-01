@@ -28,11 +28,11 @@ namespace Assignment4
             // context.Characters.Add(hulk);
             // context.SaveChanges();
 
-            // KanbanContextFactory.Seed(context);
+            KanbanContextFactory.Seed(context);
 
-            var rasmus = new User { Id = 4, Email = "coha@itu.dk", Name = "Rasmus" };
-            context.Users.Add(rasmus);
-            context.SaveChanges();
+            // var rasmus = new User { Id = 4, Email = "coha@itu.dk", Name = "Rasmus" };
+            // context.Users.Add(rasmus);
+            // context.SaveChanges();
 
             // var chars = from c in context.Characters
             //             where c.AlterEgo.Contains("a")

@@ -1,4 +1,6 @@
+using Assignment4.Core;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Assignment4.Entities
 {
@@ -21,6 +23,11 @@ namespace Assignment4.Entities
                 .Entity<Tag>()
                 .HasIndex(e => e.Name)
                 .IsUnique();
+
+            modelBuilder
+                .Entity<Task>()
+                .Property(e => e.State)
+                .HasConversion(new EnumToStringConverter<State>());
         }
     }
 }
