@@ -6,12 +6,17 @@ namespace Assignment4.Entities
     {
         public KanbanContext(DbContextOptions<KanbanContext> options) : base(options) { }
 
-        // protected override void OnModelCreating(ModelBuilder modelBuilder)
-        // {
-        //     modelBuilder
-        //         .Entity<Character>()
-        //         .Property(e => e.Gender)
-        //         .HasConversion(new EnumToStringConverter<Gender>());
-        // }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder
+                .Entity<User>()
+                .HasIndex(e => e.Email)
+                .IsUnique();
+
+            modelBuilder
+                .Entity<Tag>()
+                .HasIndex(e => e.Name)
+                .IsUnique();
+        }
     }
 }
