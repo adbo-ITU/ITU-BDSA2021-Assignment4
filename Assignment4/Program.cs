@@ -11,11 +11,7 @@ namespace Assignment4
     {
         static void Main(string[] args)
         {
-            var configuration = LoadConfiguration();
-            var connectionString = configuration.GetConnectionString("bdsa-kanban");
-
-            var optionsBuilder = new DbContextOptionsBuilder<KanbanContext>().UseNpgsql(connectionString);
-            using var context = new KanbanContext(optionsBuilder.Options);
+            using var context = GetContext();
 
             // var hulk = new Character
             // {
@@ -32,7 +28,11 @@ namespace Assignment4
             // context.Characters.Add(hulk);
             // context.SaveChanges();
 
-            // ComicsContextFactory.Seed(context);
+            // KanbanContextFactory.Seed(context);
+
+            var rasmus = new User { Id = 4, Email = "coha@itu.dk", Name = "Rasmus" };
+            context.Users.Add(rasmus);
+            context.SaveChanges();
 
             // var chars = from c in context.Characters
             //             where c.AlterEgo.Contains("a")
@@ -45,7 +45,15 @@ namespace Assignment4
             //             };
         }
 
-        static IConfiguration LoadConfiguration()
+        public static KanbanContext GetContext()
+        {
+            var configuration = LoadConfiguration();
+            var connectionString = configuration.GetConnectionString("bdsa-kanban");
+            var optionsBuilder = new DbContextOptionsBuilder<KanbanContext>().UseNpgsql(connectionString);
+            return new KanbanContext(optionsBuilder.Options);
+        }
+
+        public static IConfiguration LoadConfiguration()
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
