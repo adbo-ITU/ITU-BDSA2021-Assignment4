@@ -25,23 +25,14 @@ namespace Assignment4.Entities
 
         public ICollection<Tag> Tags { get; set; }
 
-        public TaskDTO toTaskDTO() => new TaskDTO
+        public TaskDTO toTaskDTO(List<string> tags) => new TaskDTO
         {
             AssignedToId = AssignedToId,
             Description = Description,
             Id = Id,
             State = State,
-            Tags = new ReadOnlyCollection<string>(Tags.Select(t => t.Name).ToList()),
+            Tags = new ReadOnlyCollection<string>(tags),
             Title = Title,
         };
-
-        public override string ToString()
-        {
-            return $"Title: {Title}"
-                + $"\nDescription: {Description}"
-            + $"\nAssignedToId: {AssignedToId}"
-            + $"\nState: {State}"
-            + $"\nId: {Id}";
-        }
     }
 }

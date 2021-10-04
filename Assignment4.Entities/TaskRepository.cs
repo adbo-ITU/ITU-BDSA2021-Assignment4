@@ -13,13 +13,21 @@ namespace Assignment4.Entities
         public IReadOnlyCollection<TaskDTO> All()
         {
             var tasks = context.Tasks.ToList();
+            var taskDtos = new List<TaskDTO>();
             foreach (var task in tasks)
             {
-                var tags = context.Entry(task).Collection(t => t.Tags).Query().Select(t => t.Name);
+                var tags = context
+                    .Entry(task)
+                    .Collection(t => t.Tags)
+                    .Query()
+                    .OrderBy(t => t.Name)
+                    .Select(t => t.Name)
+                    .ToList();
+                var taskDto = task.toTaskDTO(tags);
+                taskDtos.Add(taskDto);
             }
 
-            var dto = context.Tasks.Select(t => t.toTaskDTO()).ToList();
-            return new ReadOnlyCollection<TaskDTO>(dto);
+            return new ReadOnlyCollection<TaskDTO>(taskDtos);
         }
 
         public int Create(TaskDTO task)

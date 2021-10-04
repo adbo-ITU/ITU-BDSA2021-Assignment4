@@ -44,9 +44,9 @@ namespace Assignment4.Entities.Tests
             var doPizzaTask = new Task { Id = 2, Title = "Pizza", AssignedTo = mads, Description = "It's a me, Mario!", State = State.New, Tags = new[] { breakfast, dinner }, AssignedToId = 2 };
             var doHangoverSmoothieTask = new Task { Id = 3, Title = "Hangover smoothie", AssignedTo = mads, Description = "Juice, chokoladestykker, frosne bananer, yoghurt", State = State.Resolved, Tags = new[] { breakfast, dinner }, AssignedToId = 2 };
 
-            doChili = doChiliTask.toTaskDTO();
-            doPizza = doPizzaTask.toTaskDTO();
-            doHangoverSmoothie = doHangoverSmoothieTask.toTaskDTO();
+            doChili = doChiliTask.toTaskDTO(doChiliTask.Tags.Select(t => t.Name).ToList());
+            doPizza = doPizzaTask.toTaskDTO(doPizzaTask.Tags.Select(t => t.Name).ToList());
+            doHangoverSmoothie = doHangoverSmoothieTask.toTaskDTO(doHangoverSmoothieTask.Tags.Select(t => t.Name).ToList());
         }
 
         public void Dispose()
@@ -72,11 +72,21 @@ namespace Assignment4.Entities.Tests
 
             var expectedTasks = new[] { doChili, doPizza, doHangoverSmoothie };
 
-            Assert.True(orderedById.Count == expectedTasks.Length);
+            Assert.Equal(expectedTasks.Length, orderedById.Count);
 
             for (int i = 0; i < expectedTasks.Length; i++)
             {
-                Assert.True(TaskDTO.CustomEquals(expectedTasks[i], orderedById[i]));
+                var a = expectedTasks[i];
+                var b = orderedById[i];
+                Assert.Equal(a.Id, b.Id);
+                Assert.Equal(a.Title, b.Title);
+                Assert.Equal(a.Description, b.Description);
+                Assert.Equal(a.AssignedToId, b.AssignedToId);
+                Assert.Equal(a.State, b.State);
+
+                var aTags = a.Tags.ToList();
+                var bTags = b.Tags.ToList();
+                Assert.Equal(aTags, bTags);
             }
         }
     }
