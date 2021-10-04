@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Assignment4.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -28,7 +29,19 @@ namespace Assignment4
             // context.Characters.Add(hulk);
             // context.SaveChanges();
 
-            KanbanContextFactory.Seed(context);
+            // KanbanContextFactory.Seed(context);
+
+            var repository = new TaskRepository
+            {
+                context = context,
+            };
+
+            var all = repository.All();
+
+            foreach (var item in context.Tasks)
+            {
+                Console.WriteLine(item);
+            }
 
             // var rasmus = new User { Id = 4, Email = "coha@itu.dk", Name = "Rasmus" };
             // context.Users.Add(rasmus);
