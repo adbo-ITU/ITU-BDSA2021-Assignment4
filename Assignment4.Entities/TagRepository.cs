@@ -57,7 +57,15 @@ namespace Assignment4.Entities
 
         public Response Update(TagUpdateDTO tag)
         {
-            throw new System.NotImplementedException();
+            var entity = _context.Tags.Find(tag.Id);
+
+            if (entity == null)
+                return Response.NotFound;
+
+            entity.Name = tag.Name;
+            _context.SaveChanges();
+
+            return Response.Updated;
         }
     }
 }

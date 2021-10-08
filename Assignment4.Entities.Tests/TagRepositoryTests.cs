@@ -147,5 +147,23 @@ namespace Assignment4.Entities.Tests
                 tag => Assert.Equal("Charlie", tag.Name)
             );
         }
+
+        [Fact]
+        public void Update_modifies_existing_tag()
+        {
+            // Arrange
+            var newTag = new Tag { Name = "Electric Boogaloo 1" };
+            _context.Tags.Add(newTag);
+            _context.SaveChanges();
+
+            // Act
+            _repo.Update(new TagUpdateDTO { Id = newTag.Id, Name = "Electric Boogaloo 2" });
+
+            var updatedTag = _context.Tags.Find(newTag.Id);
+
+            // Assert
+            Assert.Equal(newTag.Id, updatedTag.Id);
+            Assert.Equal("Electric Boogaloo 2", updatedTag.Name);
+        }
     }
 }
