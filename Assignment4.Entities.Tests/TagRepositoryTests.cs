@@ -129,14 +129,23 @@ namespace Assignment4.Entities.Tests
         }
 
         [Fact]
-        public void Read_given_non_existing_id_returns_null()
+        public void ReadAll_returns_all_tags()
         {
             // Arrange
+            _context.Tags.Add(new Tag { Name = "Alpha" });
+            _context.Tags.Add(new Tag { Name = "Charlie" });
+            _context.Tags.Add(new Tag { Name = "Bravo" });
+            _context.SaveChanges();
+
             // Act
-            var tag = _repo.Read(123);
+            var tags = _repo.ReadAll().OrderBy(t => t.Name);
 
             // Assert
-            Assert.Null(tag);
+            Assert.Collection(tags,
+                tag => Assert.Equal(tag.Name, "Alpha"),
+                tag => Assert.Equal(tag.Name, "Bravo"),
+                tag => Assert.Equal(tag.Name, "Charlie")
+            );
         }
     }
 }

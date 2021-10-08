@@ -49,10 +49,11 @@ namespace Assignment4.Entities
             return tag != null ? new TagDTO(tag.Id, tag.Name) : null;
         }
 
-        public IReadOnlyCollection<TagDTO> ReadAll()
-        {
-            throw new System.NotImplementedException();
-        }
+        public IReadOnlyCollection<TagDTO> ReadAll() => _context
+            .Tags
+            .Select(tag => new TagDTO(tag.Id, tag.Name))
+            .ToList()
+            .AsReadOnly();
 
         public Response Update(TagUpdateDTO tag)
         {
