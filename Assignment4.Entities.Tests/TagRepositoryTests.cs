@@ -75,5 +75,41 @@ namespace Assignment4.Entities.Tests
             // Assert
             Assert.Equal(Response.Conflict, response);
         }
+
+        [Fact]
+        public void Delete_given_id_not_existing_returns_NotFound()
+        {
+            // Arrange
+            // Act
+            var response = _repo.Delete(123);
+
+            // Assert
+            Assert.Equal(Response.NotFound, response);
+        }
+
+        [Fact]
+        public void Create_already_existing_returns_Conflict()
+        {
+            // Arrange
+            _context.Tags.Add(new Tag { Name = "Hygge med Bjørn" });
+            _context.SaveChanges();
+
+            // Act
+            var (response, tagId) = _repo.Create(new TagCreateDTO { Name = "Hygge med Bjørn" });
+
+            // Assert
+            Assert.Equal(Response.Conflict, response);
+        }
+
+        [Fact]
+        public void Create_given_new_name_returns_created()
+        {
+            // Arrange
+            // Act
+            var (response, tagId) = _repo.Create(new TagCreateDTO { Name = "Hygge med Bjørn" });
+
+            // Assert
+            Assert.Equal(Response.Created, response);
+        }
     }
 }
