@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.IO;
 using Assignment4.Core;
+using Microsoft.Extensions.Configuration;
 
 namespace Assignment4.Entities
 {
@@ -9,7 +11,6 @@ namespace Assignment4.Entities
 
         public TagRepository(KanbanContext context)
         {
-
             _context = context;
         }
 
@@ -20,7 +21,16 @@ namespace Assignment4.Entities
 
         public Response Delete(int tagId, bool force = false)
         {
-            throw new System.NotImplementedException();
+            var tag = _context.Tags.Find(tagId);
+
+            if (tag.tasks.Count > 0 && !force)
+            {
+                return Response.Conflict;
+            }
+
+            _context.Tags.Remove(tag);
+
+            return Response.Deleted;
         }
 
         public TagDTO Read(int tagId)

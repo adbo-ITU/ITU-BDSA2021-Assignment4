@@ -83,14 +83,6 @@ namespace Assignment4.Entities
         //     throw new NotImplementedException();
         // }
 
-        public void RemoveAllData()
-        {
-            using var transaction = context.Database.BeginTransaction();
-            context.Users.RemoveRange(context.Users);
-            context.Tasks.RemoveRange(context.Tasks);
-            context.Tags.RemoveRange(context.Tags);
-            context.SaveChanges();
-            transaction.Commit();
-        }
+
     }
 }

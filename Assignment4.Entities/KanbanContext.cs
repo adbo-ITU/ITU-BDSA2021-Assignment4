@@ -29,5 +29,15 @@ namespace Assignment4.Entities
                 .Property(e => e.State)
                 .HasConversion(new EnumToStringConverter<State>());
         }
+
+        public void RemoveAllData()
+        {
+            using var transaction = Database.BeginTransaction();
+            Users.RemoveRange(Users);
+            Tasks.RemoveRange(Tasks);
+            Tags.RemoveRange(Tags);
+            SaveChanges();
+            transaction.Commit();
+        }
     }
 }
