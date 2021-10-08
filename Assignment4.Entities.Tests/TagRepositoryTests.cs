@@ -142,9 +142,9 @@ namespace Assignment4.Entities.Tests
 
             // Assert
             Assert.Collection(tags,
-                tag => Assert.Equal(tag.Name, "Alpha"),
-                tag => Assert.Equal(tag.Name, "Bravo"),
-                tag => Assert.Equal(tag.Name, "Charlie")
+                tag => Assert.Equal("Alpha", tag.Name),
+                tag => Assert.Equal("Bravo", tag.Name),
+                tag => Assert.Equal("Charlie", tag.Name)
             );
         }
     }
