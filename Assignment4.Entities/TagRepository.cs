@@ -45,7 +45,8 @@ namespace Assignment4.Entities
 
         public TagDTO Read(int tagId)
         {
-            throw new System.NotImplementedException();
+            var tag = _context.Tags.Find(tagId);
+            return tag != null ? new TagDTO(tag.Id, tag.Name) : null;
         }
 
         public IReadOnlyCollection<TagDTO> ReadAll()

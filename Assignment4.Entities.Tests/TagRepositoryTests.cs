@@ -111,5 +111,32 @@ namespace Assignment4.Entities.Tests
             // Assert
             Assert.Equal(Response.Created, response);
         }
+
+        [Fact]
+        public void Read_given_existing_id_returns_same_tag()
+        {
+            // Arrange
+            var newTag = new Tag { Name = "Ooh la la" };
+            _context.Tags.Add(newTag);
+            _context.SaveChanges();
+            var expectedTag = new TagDTO(newTag.Id, "Ooh la la");
+
+            // Act
+            var tag = _repo.Read(newTag.Id);
+
+            // Assert
+            Assert.Equal(expectedTag, tag);
+        }
+
+        [Fact]
+        public void Read_given_non_existing_id_returns_null()
+        {
+            // Arrange
+            // Act
+            var tag = _repo.Read(123);
+
+            // Assert
+            Assert.Null(tag);
+        }
     }
 }
