@@ -24,32 +24,35 @@ namespace Assignment4
             return new KanbanContext(optionsBuilder.Options);
         }
 
-        public static void Seed(KanbanContext context)
+        public static void Seed(TaskRepository repository)
         {
-            // context.Database.ExecuteSqlRaw("TRUNCATE TagTask CASCADE;");
-            // context.Database.ExecuteSqlRaw("TRUNCATE Tags CASCADE;");
-            // context.Database.ExecuteSqlRaw("TRUNCATE Users CASCADE;");
-            // context.Database.ExecuteSqlRaw("TRUNCATE Tasks CASCADE;");
+            using var transaction = repository.context.Database.BeginTransaction();
 
-            var breakfast = new Tag { Name = "Breakfast", Id = 1 };
-            var lunch = new Tag { Name = "Lunch", Id = 2 };
-            var dinner = new Tag { Name = "Dinner", Id = 3 };
+            repository.CreateUser("Philip", "phcr@itu.dk");
+            repository.CreateUser("Mads", "coha@itu.dk");
+            repository.CreateUser("Adrian", "adbo@itu.dk");
 
-            var philip = new User { Id = 1, Email = "phcr@itu.dk", Name = "Philip" };
-            var mads = new User { Id = 2, Email = "coha@itu.dk", Name = "Mads" };
-            var adrian = new User { Id = 3, Email = "adbo@itu.dk", Name = "Adrian" };
+            // var breakfast = new Tag { Name = "Breakfast", Id = 1 };
+            // var lunch = new Tag { Name = "Lunch", Id = 2 };
+            // var dinner = new Tag { Name = "Dinner", Id = 3 };
 
-            var doChili = new Task { Id = 1, Title = "Chili con carne", AssignedTo = philip, Description = "Make some crazy delicious chili con carne!!!", State = State.Active, Tags = new[] { dinner } };
-            var doPizza = new Task { Id = 2, Title = "Pizza", AssignedTo = mads, Description = "It's a me, Mario!", State = State.New, Tags = new[] { breakfast, dinner } };
-            var doHangoverSmoothie = new Task { Id = 3, Title = "Hangover smoothie", AssignedTo = mads, Description = "Juice, chokoladestykker, frosne bananer, yoghurt", State = State.Resolved, Tags = new[] { breakfast, dinner } };
+            // var philip = new User { Id = 1, Email = "phcr@itu.dk", Name = "Philip" };
+            // var mads = new User { Id = 2, Email = "coha@itu.dk", Name = "Mads" };
+            // var adrian = new User { Id = 3, Email = "adbo@itu.dk", Name = "Adrian" };
 
-            context.Tasks.AddRange(
-                doChili,
-                doPizza,
-                doHangoverSmoothie
-            );
+            // var doChili = new Task { Id = 1, Title = "Chili con carne", AssignedTo = philip, Description = "Make some crazy delicious chili con carne!!!", State = State.Active, Tags = new[] { dinner } };
+            // var doPizza = new Task { Id = 2, Title = "Pizza", AssignedTo = mads, Description = "It's a me, Mario!", State = State.New, Tags = new[] { breakfast, dinner } };
+            // var doHangoverSmoothie = new Task { Id = 3, Title = "Hangover smoothie", AssignedTo = mads, Description = "Juice, chokoladestykker, frosne bananer, yoghurt", State = State.Resolved, Tags = new[] { breakfast, dinner } };
 
-            context.SaveChanges();
+            // context.Tasks.AddRange(
+            //     doChili,
+            //     doPizza,
+            //     doHangoverSmoothie
+            // );
+
+            // context.SaveChanges();
+
+            transaction.Commit();
         }
     }
 }

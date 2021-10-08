@@ -12,82 +12,101 @@ namespace Assignment4.Entities.Tests
 {
     public class TaskRepositoryTests : IDisposable
     {
-        KanbanContext context;
-        TaskRepository repository;
+        // private readonly TaskRepository _repo;
 
-        TaskDTO doChili, doPizza, doHangoverSmoothie;
+        // public CityRepositoryTests()
+        // {
+        //     var connection = new SqliteConnection("Filename=:memory:");
+        //     connection.Open();
+        //     var builder = new DbContextOptionsBuilder<ComicsContext>();
+        //     builder.UseSqlite(connection);
+        //     var context = new ComicsContext(builder.Options);
+        //     context.Database.EnsureCreated();
+        //     context.Cities.Add(new City { Name = "Metropolis" });
+        //     context.SaveChanges();
 
-        public TaskRepositoryTests()
-        {
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddUserSecrets<TaskRepositoryTests>()
-                .Build();
-            var connectionString = configuration.GetConnectionString("bdsa-kanban");
-            var optionsBuilder = new DbContextOptionsBuilder<KanbanContext>().UseNpgsql(connectionString);
-            context = new KanbanContext(optionsBuilder.Options);
-            repository = new TaskRepository
-            {
-                context = context
-            };
+        //     _context = context;
+        //     _repo = new CityRepository(_context);
+        // }
 
-            // Add default tasks
-            var breakfast = new Tag { Name = "Breakfast", Id = 1 };
-            var lunch = new Tag { Name = "Lunch", Id = 2 };
-            var dinner = new Tag { Name = "Dinner", Id = 3 };
-
-            var philip = new User { Id = 1, Email = "phcr@itu.dk", Name = "Philip" };
-            var mads = new User { Id = 2, Email = "coha@itu.dk", Name = "Mads" };
-            var adrian = new User { Id = 3, Email = "adbo@itu.dk", Name = "Adrian" };
-
-            var doChiliTask = new Task { Id = 1, Title = "Chili con carne", AssignedTo = philip, Description = "Make some crazy delicious chili con carne!!!", State = State.Active, Tags = new[] { dinner }, AssignedToId = 1 };
-            var doPizzaTask = new Task { Id = 2, Title = "Pizza", AssignedTo = mads, Description = "It's a me, Mario!", State = State.New, Tags = new[] { breakfast, dinner }, AssignedToId = 2 };
-            var doHangoverSmoothieTask = new Task { Id = 3, Title = "Hangover smoothie", AssignedTo = mads, Description = "Juice, chokoladestykker, frosne bananer, yoghurt", State = State.Resolved, Tags = new[] { breakfast, dinner }, AssignedToId = 2 };
-
-            doChili = doChiliTask.toTaskDTO(doChiliTask.Tags.Select(t => t.Name).ToList());
-            doPizza = doPizzaTask.toTaskDTO(doPizzaTask.Tags.Select(t => t.Name).ToList());
-            doHangoverSmoothie = doHangoverSmoothieTask.toTaskDTO(doHangoverSmoothieTask.Tags.Select(t => t.Name).ToList());
-        }
+        // public TaskRepositoryTests()
+        // {
+        //     var configuration = new ConfigurationBuilder()
+        //         .SetBasePath(Directory.GetCurrentDirectory())
+        //         .AddUserSecrets<TaskRepositoryTests>()
+        //         .Build();
+        //     var connectionString = configuration.GetConnectionString("bdsa-kanban");
+        //     var optionsBuilder = new DbContextOptionsBuilder<KanbanContext>().UseNpgsql(connectionString);
+        //     context = new KanbanContext(optionsBuilder.Options);
+        //     repository = new TaskRepository
+        //     {
+        //         context = context
+        //     };
+        // }
 
         public void Dispose()
         {
-            repository.Dispose();
+            // repository.Dispose();
         }
 
-        [Fact]
-        public void Add_user_with_duplicate_email_errors()
-        {
-            var rasmus = new User { Id = 53211, Email = "coha@itu.dk", Name = "Rasmus" };
+        // [Fact]
+        // public void Add_user_with_duplicate_email_errors()
+        // {
+        //     repository.RemoveAllData();
+        //     repository.CreateUser("Rasmus", "coha@itu.dk");
+        //     Assert.Throws<Microsoft.EntityFrameworkCore.DbUpdateException>(() => repository.CreateUser("Mads", "coha@itu.dk"));
+        // }
 
-            context.Users.Add(rasmus);
+        // [Fact]
+        // public void All_returns_all()
+        // {
+        //     repository.RemoveAllData();
 
-            Assert.Throws<Microsoft.EntityFrameworkCore.DbUpdateException>(() => context.SaveChanges());
-        }
+        //     var philipId = repository.CreateUser("Philip", "phcr@itu.dk");
+        //     var madsId = repository.CreateUser("Mads", "coha@itu.dk");
+        //     var adrianId = repository.CreateUser("Adrian", "adbo@itu.dk");
 
-        [Fact]
-        public void All_returns_all()
-        {
-            var all = repository.All();
-            var orderedById = all.OrderBy(task => task.Id).ToList();
+        //     repository.Create(new TaskDTO
+        //     {
+        //         AssignedToId = adrianId,
+        //     });
 
-            var expectedTasks = new[] { doChili, doPizza, doHangoverSmoothie };
 
-            Assert.Equal(expectedTasks.Length, orderedById.Count);
+        //     // var all = repository.All();
+        //     // var orderedByName = all.OrderBy(task => task.Id).ToList();
 
-            for (int i = 0; i < expectedTasks.Length; i++)
-            {
-                var a = expectedTasks[i];
-                var b = orderedById[i];
-                Assert.Equal(a.Id, b.Id);
-                Assert.Equal(a.Title, b.Title);
-                Assert.Equal(a.Description, b.Description);
-                Assert.Equal(a.AssignedToId, b.AssignedToId);
-                Assert.Equal(a.State, b.State);
 
-                var aTags = a.Tags.ToList();
-                var bTags = b.Tags.ToList();
-                Assert.Equal(aTags, bTags);
-            }
-        }
+        //     // var expectedTasks = new[] { doChili, doPizza, doHangoverSmoothie };
+
+        //     // Assert.Equal(expectedTasks.Length, orderedById.Count);
+
+        //     // for (int i = 0; i < expectedTasks.Length; i++)
+        //     // {
+        //     //     var a = expectedTasks[i];
+        //     //     var b = orderedById[i];
+        //     //     Assert.Equal(a.Id, b.Id);
+        //     //     Assert.Equal(a.Title, b.Title);
+        //     //     Assert.Equal(a.Description, b.Description);
+        //     //     Assert.Equal(a.AssignedToId, b.AssignedToId);
+        //     //     Assert.Equal(a.State, b.State);
+
+        //     //     var aTags = a.Tags.ToList();
+        //     //     var bTags = b.Tags.ToList();
+        //     //     Assert.Equal(aTags, bTags);
+        //     // }
+        // }
+
+        // // [Fact]
+        // // public void Create_returns_id_and_adds_to_database()
+        // // {
+        // //     repository.RemoveAllData();
+        // //     repository.Create(new TaskDTO
+        // //     {
+        // //         Title = "Test task",
+        // //         Description = "Test description",
+        // //         State = State.New,
+        // //         Tags = (new[] { "test tag" }).ToList(),
+        // //     });
+        // // }
     }
 }

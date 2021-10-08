@@ -3,11 +3,13 @@ using System.ComponentModel.DataAnnotations;
 using Assignment4.Core;
 using System.Linq;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Assignment4.Entities
 {
     public class Task
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Required]
@@ -16,7 +18,7 @@ namespace Assignment4.Entities
 
         public User AssignedTo { get; set; }
 
-        public int AssignedToId { get; set; }
+        public int? AssignedToId { get; set; }
 
         public string Description { get; set; }
 
@@ -25,14 +27,12 @@ namespace Assignment4.Entities
 
         public ICollection<Tag> Tags { get; set; }
 
-        public TaskDTO toTaskDTO(List<string> tags) => new TaskDTO
-        {
-            AssignedToId = AssignedToId,
-            Description = Description,
-            Id = Id,
-            State = State,
-            Tags = new ReadOnlyCollection<string>(tags),
-            Title = Title,
-        };
-    }
+        // public TaskDTO toTaskDTO(List<string> tags) => new TaskDTO
+        // {
+        //     Id = Id,
+        //     Title = Title,
+        //     AssignedToName = AssignedTo?.Name,
+        //     Tags = new ReadOnlyCollection<string>(tags),
+        //     State = State,
+    };
 }
