@@ -1,5 +1,16 @@
 # Assignment #4
 
+## Notes from us, the group
+
+To migrate and update database:
+
+```powershell
+# Migrate
+dotnet ef migrations add migrationname -p .\Assignment4.Entities\ -s .\Assignment4\
+# Update DB
+dotnet ef database update -p .\Assignment4.Entities\ -s .\Assignment4\
+```
+
 ## C&#35;
 
 Clone this repository and bring the code pieces you need into your BDSA Assignments GitHub repository.
