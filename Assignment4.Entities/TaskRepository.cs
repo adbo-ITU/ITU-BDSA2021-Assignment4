@@ -2,57 +2,99 @@ using System;
 using System.Collections.Generic;
 using Assignment4.Core;
 using System.Linq;
-using System.Collections.ObjectModel;
 
 namespace Assignment4.Entities
 {
-    public class TaskRepository // : ITaskRepository
+    public class TaskRepository : ITaskRepository
     {
-        public KanbanContext context { get; init; }
+        private KanbanContext _context;
 
-        // public IReadOnlyCollection<TaskDTO> All()
-        // {
-        //     var tasks = context.Tasks.ToList();
-        //     var taskDtos = new List<TaskDTO>();
-        //     foreach (var task in tasks)
-        //     {
-        //         var tags = context
-        //             .Entry(task)
-        //             .Collection(t => t.Tags)
-        //             .Query()
-        //             .OrderBy(t => t.Name)
-        //             .Select(t => t.Name)
-        //             .ToList();
-        //         var taskDto = task.toTaskDTO(tags);
-        //         taskDtos.Add(taskDto);
-        //     }
+        public TaskRepository(KanbanContext context)
+        {
+            _context = context;
+        }
 
-        //     return new ReadOnlyCollection<TaskDTO>(taskDtos);
-        // }
+        public void Dispose() => _context.Dispose();
 
-        // public int Create(TaskDTO task)
-        // {
-        //     var newTask = new Task
-        //     {
-        //         Title = task.Title,
-        //         AssignedTo = context.Users.SingleOrDefault(u => u.Id == task.AssignedToId),
-        //         Description = task.Description,
-        //         State = task.State,
-        //         Tags = task.Tags.Select(tagName =>
-        //         {
-        //             var tagsWithName = from t in context.Tags
-        //                                where t.Name == tagName
-        //                                select t;
+        (Response Response, int TaskId) ITaskRepository.Create(TaskCreateDTO task)
+        {
+            throw new NotImplementedException();
+            // var newTask = new Task
+            // {
+            //     Title = task.Title,
+            //     AssignedTo = _context.Users.SingleOrDefault(u => u.Id == task.AssignedToId),
+            //     Description = task.Description,
+            //     State = task.State,
+            //     Tags = task.Tags.Select(tagName =>
+            //     {
+            //         var tagsWithName = from t in _context.Tags
+            //                            where t.Name == tagName
+            //                            select t;
 
-        //             return tagsWithName.Any() ? tagsWithName.First() : new Tag { Name = tagName };
-        //         }).ToList(),
-        //     };
+            //         return tagsWithName.Any() ? tagsWithName.First() : new Tag { Name = tagName };
+            //     }).ToList(),
+            // };
 
-        //     context.Tasks.Add(newTask);
-        //     context.SaveChanges();
+            // _context.Tasks.Add(newTask);
+            // _context.SaveChanges();
 
-        //     return newTask.Id;
-        // }
+            // return newTask.Id;
+        }
+
+        public IReadOnlyCollection<TaskDTO> ReadAll()
+        {
+            var tasks = _context.Tasks.ToList();
+            var taskDtos = new List<TaskDTO>();
+            foreach (var task in tasks)
+            {
+                var tags = _context
+                    .Entry(task)
+                    .Collection(t => t.Tags)
+                    .Query()
+                    .OrderBy(t => t.Name)
+                    .Select(t => t.Name)
+                    .ToList();
+
+                taskDtos.Add(new TaskDTO(task.Id, task.Title, task.AssignedTo?.Name, tags.AsReadOnly(), task.State));
+            }
+
+            return taskDtos.AsReadOnly();
+        }
+
+        public IReadOnlyCollection<TaskDTO> ReadAllRemoved()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IReadOnlyCollection<TaskDTO> ReadAllByTag(string tag)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IReadOnlyCollection<TaskDTO> ReadAllByUser(int userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IReadOnlyCollection<TaskDTO> ReadAllByState(State state)
+        {
+            throw new NotImplementedException();
+        }
+
+        public TaskDetailsDTO Read(int taskId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Response Update(TaskUpdateDTO task)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Response Delete(int taskId)
+        {
+            throw new NotImplementedException();
+        }
 
         public int CreateUser(string name, string email)
         {
@@ -61,28 +103,9 @@ namespace Assignment4.Entities
                 Name = name,
                 Email = email,
             };
-            context.Users.Add(newUser);
-            context.SaveChanges();
+            _context.Users.Add(newUser);
+            _context.SaveChanges();
             return newUser.Id;
         }
-
-        // public void Delete(int taskId)
-        // {
-        //     throw new NotImplementedException();
-        // }
-
-        public void Dispose() => context.Dispose();
-
-        // public TaskDetailsDTO FindById(int id)
-        // {
-        //     throw new NotImplementedException();
-        // }
-
-        // public void Update(TaskDTO task)
-        // {
-        //     throw new NotImplementedException();
-        // }
-
-
     }
 }

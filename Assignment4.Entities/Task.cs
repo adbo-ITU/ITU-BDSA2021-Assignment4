@@ -26,13 +26,5 @@ namespace Assignment4.Entities
         public State State { get; set; }
 
         public ICollection<Tag> Tags { get; set; }
-
-        // public TaskDTO toTaskDTO(List<string> tags) => new TaskDTO
-        // {
-        //     Id = Id,
-        //     Title = Title,
-        //     AssignedToName = AssignedTo?.Name,
-        //     Tags = new ReadOnlyCollection<string>(tags),
-        //     State = State,
     };
 }

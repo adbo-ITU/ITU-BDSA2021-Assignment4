@@ -12,6 +12,7 @@ using System.Collections.Generic;
 
 namespace Assignment4.Entities.Tests
 {
+    [Collection("Sequential")]
     public class TagRepositoryTests : IDisposable
     {
         private readonly KanbanContext _context;
