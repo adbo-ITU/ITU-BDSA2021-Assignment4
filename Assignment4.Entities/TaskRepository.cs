@@ -158,12 +158,32 @@ namespace Assignment4.Entities
 
             // FIXME: MISSING - UPDATE TAGS
 
+            _context.SaveChanges();
+
             return Response.Updated;
         }
 
         public Response Delete(int taskId)
         {
-            throw new NotImplementedException();
+            var task = _context.Tasks.Find(taskId);
+
+            if (task == null)
+                return Response.NotFound;
+
+            switch (task.State)
+            {
+                case State.Active:
+                    task.State = State.Removed;
+                    task.StateUpdated = DateTime.UtcNow;
+                    _context.SaveChanges();
+                    return Response.Updated;
+                case State.New:
+                    _context.Tasks.Remove(task);
+                    _context.SaveChanges();
+                    return Response.Deleted;
+                default:
+                    return Response.Conflict;
+            }
         }
 
         public int CreateUser(string name, string email)

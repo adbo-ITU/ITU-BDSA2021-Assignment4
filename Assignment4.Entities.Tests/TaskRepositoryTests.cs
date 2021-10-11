@@ -243,5 +243,58 @@ namespace Assignment4.Entities.Tests
             Assert.Equal(State.Resolved, task.State);
             Assert.Equal(DateTime.UtcNow, task.StateUpdated, precision: TimeSpan.FromSeconds(5));
         }
+
+        [Fact]
+        public void Delete_active_sets_task_to_removed()
+        {
+            // Arrange
+            var newTask = new Task { Title = "Hygge med Bamse", Description = "👀", State = State.Active, Tags = new HashSet<Tag>(new[] { new Tag { Name = "hygge" } }), AssignedTo = new User { Name = "Geralt", Email = "butcher@blaviken.km" }, Created = DateTime.SpecifyKind(new DateTime(2008, 3, 1, 7, 0, 0), DateTimeKind.Utc), StateUpdated = DateTime.SpecifyKind(new DateTime(2009, 3, 1, 7, 0, 0), DateTimeKind.Utc) };
+            _context.Tasks.Add(newTask);
+            _context.SaveChanges();
+
+            // Act
+            var response = _repo.Delete(newTask.Id);
+            var task = _context.Tasks.Find(newTask.Id);
+
+            // Assert
+            Assert.Equal(Response.Updated, response);
+            Assert.NotNull(task);
+            Assert.Equal(State.Removed, task.State);
+            Assert.Equal(DateTime.UtcNow, task.StateUpdated, precision: TimeSpan.FromSeconds(5));
+        }
+
+        [Fact]
+        public void Delete_closed_returns_conflict()
+        {
+            // Arrange
+            var newTask = new Task { Title = "Hygge med Bamse", Description = "👀", State = State.Closed, Tags = new HashSet<Tag>(new[] { new Tag { Name = "hygge" } }), AssignedTo = new User { Name = "Geralt", Email = "butcher@blaviken.km" }, Created = DateTime.SpecifyKind(new DateTime(2008, 3, 1, 7, 0, 0), DateTimeKind.Utc), StateUpdated = DateTime.SpecifyKind(new DateTime(2009, 3, 1, 7, 0, 0), DateTimeKind.Utc) };
+            _context.Tasks.Add(newTask);
+            _context.SaveChanges();
+
+            // Act
+            var response = _repo.Delete(newTask.Id);
+            var task = _context.Tasks.Find(newTask.Id);
+
+            // Assert
+            Assert.Equal(Response.Conflict, response);
+            Assert.NotNull(task);
+        }
+
+        [Fact]
+        public void Delete_new_removes_from_database()
+        {
+            // Arrange
+            var newTask = new Task { Title = "Hygge med Bamse", Description = "👀", State = State.New, Tags = new HashSet<Tag>(new[] { new Tag { Name = "hygge" } }), AssignedTo = new User { Name = "Geralt", Email = "butcher@blaviken.km" }, Created = DateTime.SpecifyKind(new DateTime(2008, 3, 1, 7, 0, 0), DateTimeKind.Utc), StateUpdated = DateTime.SpecifyKind(new DateTime(2009, 3, 1, 7, 0, 0), DateTimeKind.Utc) };
+            _context.Tasks.Add(newTask);
+            _context.SaveChanges();
+
+            // Act
+            var response = _repo.Delete(newTask.Id);
+            var task = _context.Tasks.Find(newTask.Id);
+
+            // Assert
+            Assert.Equal(Response.Deleted, response);
+            Assert.Null(task);
+        }
     }
 }
