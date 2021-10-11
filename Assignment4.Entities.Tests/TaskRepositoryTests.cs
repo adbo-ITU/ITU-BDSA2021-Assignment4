@@ -67,5 +67,28 @@ namespace Assignment4.Entities.Tests
                 task => AssertEqualTasks(new TaskDTO(newTasks[1].Id, "Hygge med Kylling", null, new[] { "dinner" }, State.Closed), task)
             );
         }
+
+        [Fact]
+        public void ReadAllRemoved_returns_all_removed_tasks()
+        {
+            // Arrange
+            var butcher = new User { Name = "Geralt", Email = "butcher@blaviken.km" };
+            var newTasks = new Task[] {
+                new Task { Title = "Hygge med Bamse", Description = "👀", State = State.Removed, Tags = new HashSet<Tag>(new[] { new Tag { Name = "hygge" } }), AssignedTo = butcher },
+                new Task { Title = "Hygge med Kylling", Description = "chicken nuggets mm", State = State.Closed, Tags = new HashSet<Tag>(new[] { new Tag { Name = "dinner" } }) },
+                new Task { Title = "Hygge med Ælling", Description = "i love anderilette", State = State.Removed, AssignedTo = butcher },
+            };
+            _context.Tasks.AddRange(newTasks);
+            _context.SaveChanges();
+
+            // Act
+            var all = _repo.ReadAllRemoved().OrderBy(task => task.Title);
+
+            // Assert
+            Assert.Collection(all,
+                task => AssertEqualTasks(new TaskDTO(newTasks[2].Id, "Hygge med Ælling", "Geralt", new string[] { }, State.Removed), task),
+                task => AssertEqualTasks(new TaskDTO(newTasks[0].Id, "Hygge med Bamse", "Geralt", new[] { "hygge" }, State.Removed), task)
+            );
+        }
     }
 }

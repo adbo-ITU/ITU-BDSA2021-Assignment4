@@ -41,29 +41,35 @@ namespace Assignment4.Entities
             // return newTask.Id;
         }
 
+        private IReadOnlyCollection<string> ReadTaskTags(Task task) => _context
+            .Entry(task)
+            .Collection(t => t.Tags)
+            .Query()
+            .Select(t => t.Name)
+            .ToList();
+
+        private TaskDTO TaskDTOFromTask(Task task) => new TaskDTO(
+            task.Id, task.Title, task.AssignedTo?.Name, ReadTaskTags(task), task.State);
+
         public IReadOnlyCollection<TaskDTO> ReadAll()
         {
-            var tasks = _context.Tasks.ToList();
-            var taskDtos = new List<TaskDTO>();
-            foreach (var task in tasks)
-            {
-                var tags = _context
-                    .Entry(task)
-                    .Collection(t => t.Tags)
-                    .Query()
-                    .OrderBy(t => t.Name)
-                    .Select(t => t.Name)
-                    .ToList();
+            var tasks = from task in _context.Tasks
+                        select task;
+            var taskDtos = from task in tasks.ToList()
+                           select TaskDTOFromTask(task);
 
-                taskDtos.Add(new TaskDTO(task.Id, task.Title, task.AssignedTo?.Name, tags.AsReadOnly(), task.State));
-            }
-
-            return taskDtos.AsReadOnly();
+            return taskDtos.ToList().AsReadOnly();
         }
 
         public IReadOnlyCollection<TaskDTO> ReadAllRemoved()
         {
-            throw new NotImplementedException();
+            var removed = from task in _context.Tasks
+                          where task.State == State.Removed
+                          select task;
+            var taskDtos = from task in removed.ToList()
+                           select TaskDTOFromTask(task);
+
+            return taskDtos.ToList().AsReadOnly();
         }
 
         public IReadOnlyCollection<TaskDTO> ReadAllByTag(string tag)
