@@ -78,7 +78,7 @@ namespace Assignment4.Entities
             var foundTag = _context.Tags.FirstOrDefault(t => t.Name == tag);
 
             if (foundTag == null)
-                return new List<TaskDTO>();
+                return null;
 
             var tasks = _context
                 .Entry(foundTag)
@@ -92,7 +92,19 @@ namespace Assignment4.Entities
 
         public IReadOnlyCollection<TaskDTO> ReadAllByUser(int userId)
         {
-            throw new NotImplementedException();
+            var foundUser = _context.Users.Find(userId);
+
+            if (foundUser == null)
+                return null;
+
+            var tasks = _context
+                .Entry(foundUser)
+                .Collection(t => t.tasks)
+                .Query();
+            var taskDtos = from task in tasks.ToList()
+                           select TaskDTOFromTask(task);
+
+            return taskDtos.ToList().AsReadOnly();
         }
 
         public IReadOnlyCollection<TaskDTO> ReadAllByState(State state)
