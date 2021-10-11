@@ -106,10 +106,15 @@ namespace Assignment4.Entities
         public (Response Response, int TaskId) Create(TaskCreateDTO task)
         {
             var now = DateTime.UtcNow;
+            var user = _context.Users.SingleOrDefault(u => u.Id == task.AssignedToId);
+
+            if (task.AssignedToId != null && user == null)
+                return (Response.BadRequest, -1);
+
             var newTask = new Task
             {
                 Title = task.Title,
-                AssignedTo = _context.Users.SingleOrDefault(u => u.Id == task.AssignedToId),
+                AssignedTo = user,
                 Description = task.Description,
                 State = State.New,
                 Tags = task.Tags.Select(tagName =>
@@ -132,7 +137,28 @@ namespace Assignment4.Entities
 
         public Response Update(TaskUpdateDTO task)
         {
-            throw new NotImplementedException();
+            var upTask = _context.Tasks.Find(task.Id);
+            var assignedToUser = _context.Users.SingleOrDefault(u => u.Id == task.AssignedToId);
+
+            if (upTask == null)
+                return Response.NotFound;
+            if (task.AssignedToId != null && assignedToUser == null)
+                return Response.BadRequest;
+
+            upTask.Title = task.Title;
+            upTask.Description = task.Description;
+            upTask.AssignedTo = assignedToUser;
+            upTask.AssignedToId = task.AssignedToId;
+
+            if (upTask.State != task.State)
+            {
+                upTask.State = task.State;
+                upTask.StateUpdated = DateTime.UtcNow;
+            }
+
+            // FIXME: MISSING - UPDATE TAGS
+
+            return Response.Updated;
         }
 
         public Response Delete(int taskId)

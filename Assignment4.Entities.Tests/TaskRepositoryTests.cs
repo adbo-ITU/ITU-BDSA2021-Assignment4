@@ -186,7 +186,7 @@ namespace Assignment4.Entities.Tests
         }
 
         [Fact]
-        public void Create_returns_id_and_adds_to_database()
+        public void Create_returns_response_and_id_and_adds_to_database()
         {
             // Arrange
             // Act
@@ -208,6 +208,39 @@ namespace Assignment4.Entities.Tests
             Assert.Equal(new[] { "hygge" }, _repo.ReadTaskTags(task));
             Assert.Equal(State.New, task.State);
             Assert.Equal(DateTime.UtcNow, task.Created, precision: TimeSpan.FromSeconds(5));
+            Assert.Equal(DateTime.UtcNow, task.StateUpdated, precision: TimeSpan.FromSeconds(5));
+        }
+
+        [Fact]
+        public void Update_returns_response_and_updates_task()
+        {
+            // Arrange
+            var newTask = new Task { Title = "Hygge med Bamse", Description = "👀", State = State.Active, Tags = new HashSet<Tag>(new[] { new Tag { Name = "hygge" } }), AssignedTo = new User { Name = "Geralt", Email = "butcher@blaviken.km" }, Created = DateTime.SpecifyKind(new DateTime(2008, 3, 1, 7, 0, 0), DateTimeKind.Utc), StateUpdated = DateTime.SpecifyKind(new DateTime(2009, 3, 1, 7, 0, 0), DateTimeKind.Utc) };
+            _context.Tasks.Add(newTask);
+            _context.SaveChanges();
+
+            // Act
+            var response = _repo.Update(new TaskUpdateDTO
+            {
+                Id = newTask.Id,
+                Title = "haha",
+                Description = "lulz",
+                State = State.Resolved,
+                AssignedToId = null,
+                Tags = new HashSet<string>(new[] { "idk" }),
+            });
+            var task = _context.Tasks.Find(newTask.Id);
+
+            // Assert
+            Assert.Equal(Response.Updated, response);
+            Assert.Equal(newTask.Id, task.Id);
+            Assert.Equal("haha", task.Title);
+            Assert.Equal("lulz", task.Description);
+            Assert.Equal(new DateTime(2008, 3, 1, 7, 0, 0), task.Created);
+            Assert.Null(task.AssignedToId);
+            // FIXME: UNCOMMENT WHEN FIXED
+            // Assert.Equal(new[] { "idk" }, _repo.ReadTaskTags(task));
+            Assert.Equal(State.Resolved, task.State);
             Assert.Equal(DateTime.UtcNow, task.StateUpdated, precision: TimeSpan.FromSeconds(5));
         }
     }
