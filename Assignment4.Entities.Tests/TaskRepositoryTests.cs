@@ -184,5 +184,31 @@ namespace Assignment4.Entities.Tests
             Assert.Equal(newTask.State, task.State);
             Assert.Equal(newTask.StateUpdated, task.StateUpdated, precision: TimeSpan.FromSeconds(5));
         }
+
+        [Fact]
+        public void Create_returns_id_and_adds_to_database()
+        {
+            // Arrange
+            // Act
+            var (response, taskId) = _repo.Create(new TaskCreateDTO
+            {
+                Title = "Hygge med Bamse",
+                AssignedToId = null,
+                Description = "bum bum bummelum",
+                Tags = new HashSet<string>(new[] { "hygge" }),
+            });
+
+            var task = _context.Tasks.Find(taskId);
+
+            // Assert
+            Assert.Equal(Response.Created, response);
+            Assert.Equal("Hygge med Bamse", task.Title);
+            Assert.Null(task.AssignedToId);
+            Assert.Equal("bum bum bummelum", task.Description);
+            Assert.Equal(new[] { "hygge" }, _repo.ReadTaskTags(task));
+            Assert.Equal(State.New, task.State);
+            Assert.Equal(DateTime.UtcNow, task.Created, precision: TimeSpan.FromSeconds(5));
+            Assert.Equal(DateTime.UtcNow, task.StateUpdated, precision: TimeSpan.FromSeconds(5));
+        }
     }
 }

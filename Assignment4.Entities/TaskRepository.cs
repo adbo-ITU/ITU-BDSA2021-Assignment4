@@ -17,32 +17,7 @@ namespace Assignment4.Entities
 
         public void Dispose() => _context.Dispose();
 
-        (Response Response, int TaskId) ITaskRepository.Create(TaskCreateDTO task)
-        {
-            throw new NotImplementedException();
-            // var newTask = new Task
-            // {
-            //     Title = task.Title,
-            //     AssignedTo = _context.Users.SingleOrDefault(u => u.Id == task.AssignedToId),
-            //     Description = task.Description,
-            //     State = task.State,
-            //     Tags = task.Tags.Select(tagName =>
-            //     {
-            //         var tagsWithName = from t in _context.Tags
-            //                            where t.Name == tagName
-            //                            select t;
-
-            //         return tagsWithName.Any() ? tagsWithName.First() : new Tag { Name = tagName };
-            //     }).ToList(),
-            // };
-
-            // _context.Tasks.Add(newTask);
-            // _context.SaveChanges();
-
-            // return newTask.Id;
-        }
-
-        private IReadOnlyCollection<string> ReadTaskTags(Task task) => _context
+        public IReadOnlyCollection<string> ReadTaskTags(Task task) => _context
             .Entry(task)
             .Collection(t => t.Tags)
             .Query()
@@ -126,6 +101,33 @@ namespace Assignment4.Entities
                 return null;
 
             return new TaskDetailsDTO(task.Id, task.Title, task.Description, task.Created, task.AssignedTo?.Name, ReadTaskTags(task), task.State, task.StateUpdated);
+        }
+
+        public (Response Response, int TaskId) Create(TaskCreateDTO task)
+        {
+            var now = DateTime.UtcNow;
+            var newTask = new Task
+            {
+                Title = task.Title,
+                AssignedTo = _context.Users.SingleOrDefault(u => u.Id == task.AssignedToId),
+                Description = task.Description,
+                State = State.New,
+                Tags = task.Tags.Select(tagName =>
+                {
+                    var tagsWithName = from t in _context.Tags
+                                       where t.Name == tagName
+                                       select t;
+
+                    return tagsWithName.Any() ? tagsWithName.First() : new Tag { Name = tagName };
+                }).ToList(),
+                Created = now,
+                StateUpdated = now,
+            };
+
+            _context.Tasks.Add(newTask);
+            _context.SaveChanges();
+
+            return (Response.Created, newTask.Id);
         }
 
         public Response Update(TaskUpdateDTO task)
