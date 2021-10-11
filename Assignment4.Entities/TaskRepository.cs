@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Assignment4.Core;
 using System.Linq;
+using System.Collections.ObjectModel;
 
 namespace Assignment4.Entities
 {
@@ -74,7 +75,19 @@ namespace Assignment4.Entities
 
         public IReadOnlyCollection<TaskDTO> ReadAllByTag(string tag)
         {
-            throw new NotImplementedException();
+            var foundTag = _context.Tags.FirstOrDefault(t => t.Name == tag);
+
+            if (foundTag == null)
+                return new List<TaskDTO>();
+
+            var tasks = _context
+                .Entry(foundTag)
+                .Collection(t => t.tasks)
+                .Query();
+            var taskDtos = from task in tasks.ToList()
+                           select TaskDTOFromTask(task);
+
+            return taskDtos.ToList().AsReadOnly();
         }
 
         public IReadOnlyCollection<TaskDTO> ReadAllByUser(int userId)
