@@ -109,7 +109,13 @@ namespace Assignment4.Entities
 
         public IReadOnlyCollection<TaskDTO> ReadAllByState(State state)
         {
-            throw new NotImplementedException();
+            var withState = from task in _context.Tasks
+                            where task.State == state
+                            select task;
+            var taskDtos = from task in withState.ToList()
+                           select TaskDTOFromTask(task);
+
+            return taskDtos.ToList().AsReadOnly();
         }
 
         public TaskDetailsDTO Read(int taskId)

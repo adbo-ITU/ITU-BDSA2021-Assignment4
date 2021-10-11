@@ -138,5 +138,29 @@ namespace Assignment4.Entities.Tests
                 task => AssertEqualTasks(new TaskDTO(newTasks[0].Id, "Hygge med Bamse", "Geralt", new[] { "hygge" }, State.Removed), task)
             );
         }
+
+        [Fact]
+        public void ReadAllByState_returns_all_tasks_with_state()
+        {
+            // Arrange
+            var butcher = new User { Name = "Geralt", Email = "butcher@blaviken.km" };
+            var hyggeTag = new Tag { Name = "hygge" };
+            var newTasks = new Task[] {
+                new Task { Title = "Hygge med Bamse", Description = "👀", State = State.Active, Tags = new HashSet<Tag>(new[] { hyggeTag }), AssignedTo = butcher },
+                new Task { Title = "Hygge med Kylling", Description = "chicken nuggets mm", State = State.Closed, Tags = new HashSet<Tag>(new[] { new Tag { Name = "dinner" }, hyggeTag }) },
+                new Task { Title = "Hygge med Ælling", Description = "i love anderilette", State = State.Active, AssignedTo = butcher },
+            };
+            _context.Tasks.AddRange(newTasks);
+            _context.SaveChanges();
+
+            // Act
+            var all = _repo.ReadAllByState(State.Active).OrderBy(task => task.Title);
+
+            // Assert
+            Assert.Collection(all,
+                task => AssertEqualTasks(new TaskDTO(newTasks[2].Id, "Hygge med Ælling", "Geralt", new string[] { }, State.Active), task),
+                task => AssertEqualTasks(new TaskDTO(newTasks[0].Id, "Hygge med Bamse", "Geralt", new[] { "hygge" }, State.Active), task)
+            );
+        }
     }
 }
