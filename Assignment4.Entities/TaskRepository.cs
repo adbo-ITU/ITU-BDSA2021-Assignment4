@@ -120,7 +120,12 @@ namespace Assignment4.Entities
 
         public TaskDetailsDTO Read(int taskId)
         {
-            throw new NotImplementedException();
+            var task = _context.Tasks.Find(taskId);
+
+            if (task == null)
+                return null;
+
+            return new TaskDetailsDTO(task.Id, task.Title, task.Description, task.Created, task.AssignedTo?.Name, ReadTaskTags(task), task.State, task.StateUpdated);
         }
 
         public Response Update(TaskUpdateDTO task)

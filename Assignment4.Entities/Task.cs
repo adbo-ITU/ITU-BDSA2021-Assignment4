@@ -4,6 +4,7 @@ using Assignment4.Core;
 using System.Linq;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations.Schema;
+using System;
 
 namespace Assignment4.Entities
 {
@@ -24,6 +25,10 @@ namespace Assignment4.Entities
 
         [Required]
         public State State { get; set; }
+
+        public DateTime Created { get; set; }
+
+        public DateTime StateUpdated { get; set; }
 
         public ICollection<Tag> Tags { get; set; }
     };

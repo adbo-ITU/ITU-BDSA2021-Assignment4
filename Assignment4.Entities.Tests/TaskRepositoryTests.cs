@@ -162,5 +162,27 @@ namespace Assignment4.Entities.Tests
                 task => AssertEqualTasks(new TaskDTO(newTasks[0].Id, "Hygge med Bamse", "Geralt", new[] { "hygge" }, State.Active), task)
             );
         }
+
+        [Fact]
+        public void Read_returns_task_with_id()
+        {
+            // Arrange
+            var newTask = new Task { Title = "Hygge med Bamse", Description = "👀", State = State.Active, Tags = new HashSet<Tag>(new[] { new Tag { Name = "hygge" } }), AssignedTo = new User { Name = "Geralt", Email = "butcher@blaviken.km" }, Created = DateTime.SpecifyKind(new DateTime(2008, 3, 1, 7, 0, 0), DateTimeKind.Utc), StateUpdated = DateTime.SpecifyKind(new DateTime(2009, 3, 1, 7, 0, 0), DateTimeKind.Utc) };
+            _context.Tasks.Add(newTask);
+            _context.SaveChanges();
+
+            // Act
+            var task = _repo.Read(newTask.Id);
+
+            // Assert
+            Assert.Equal(newTask.Id, task.Id);
+            Assert.Equal(newTask.Title, task.Title);
+            Assert.Equal(newTask.Description, task.Description);
+            Assert.Equal(newTask.Created, task.Created, precision: TimeSpan.FromSeconds(5));
+            Assert.Equal(newTask.AssignedTo.Name, task.AssignedToName);
+            Assert.Equal(new[] { "hygge" }, task.Tags.ToList());
+            Assert.Equal(newTask.State, task.State);
+            Assert.Equal(newTask.StateUpdated, task.StateUpdated, precision: TimeSpan.FromSeconds(5));
+        }
     }
 }
