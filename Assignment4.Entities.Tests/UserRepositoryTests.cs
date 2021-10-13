@@ -98,6 +98,7 @@ namespace Assignment4.Entities.Tests
             Assert.Equal(Response.Created,respons);
 
         }
+                 [Fact]
          public void Create_a_allready_exsisting_user()
         {
                // Arrange
