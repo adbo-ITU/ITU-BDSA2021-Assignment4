@@ -238,8 +238,7 @@ namespace Assignment4.Entities.Tests
             Assert.Equal("lulz", task.Description);
             Assert.Equal(new DateTime(2008, 3, 1, 7, 0, 0), task.Created);
             Assert.Null(task.AssignedToId);
-            // FIXME: UNCOMMENT WHEN FIXED
-            // Assert.Equal(new[] { "idk" }, _repo.ReadTaskTags(task));
+            Assert.Equal(new[] { "idk" }, _repo.ReadTaskTags(task));
             Assert.Equal(State.Resolved, task.State);
             Assert.Equal(DateTime.UtcNow, task.StateUpdated, precision: TimeSpan.FromSeconds(5));
         }

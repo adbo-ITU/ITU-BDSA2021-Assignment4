@@ -156,7 +156,14 @@ namespace Assignment4.Entities
                 upTask.StateUpdated = DateTime.UtcNow;
             }
 
-            // FIXME: MISSING - UPDATE TAGS
+            upTask.Tags = task.Tags.Select(tagName =>
+                {
+                    var tagsWithName = from t in _context.Tags
+                                       where t.Name == tagName
+                                       select t;
+
+                    return tagsWithName.Any() ? tagsWithName.First() : new Tag { Name = tagName };
+                }).ToList();
 
             _context.SaveChanges();
 
