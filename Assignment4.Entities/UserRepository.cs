@@ -21,11 +21,11 @@ namespace Assignment4.Entities
             var existingUserWithEmail = from u in _context.Users
                                         where u.Email == user.Email
                                         select u.Id;
-            if (existingUserWithEmail!=null){
+            if (existingUserWithEmail.Any()){
                 return ( Response.Conflict,existingUserWithEmail.First());
             }
 
-             var newUser = new User { Name = user.Name, Email = user.Email };
+            var newUser = new User { Name = user.Name, Email = user.Email };
             _context.Users.Add(newUser);
             _context.SaveChanges();
             return( Response.Created,newUser.Id);

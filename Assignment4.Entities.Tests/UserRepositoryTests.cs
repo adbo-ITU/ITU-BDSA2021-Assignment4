@@ -65,7 +65,6 @@ namespace Assignment4.Entities.Tests
         [Fact]
         public void Delete_a_user_not_using_force_returns_Conflict()
         {
-            throw new System.NotImplementedException();
              //Given
             var id = CreateUser();
             
@@ -79,7 +78,6 @@ namespace Assignment4.Entities.Tests
         [Fact]
         public void Delete_a_user_not_exsting_returns_NotFound()
         {
-              throw new System.NotImplementedException();
             var id = CreateUser()+1;
             
        
@@ -108,7 +106,7 @@ namespace Assignment4.Entities.Tests
             _context.SaveChanges();
 
             //Act
-           var (respons,userId) = _repo.Create(new UserCreateDTO{Name = "ole", Email = "ole@itu.dk"});
+           var (respons,userId) = _repo.Create(new UserCreateDTO{Name = "olga", Email = "ole@itu.dk"});
             // Assert
             Assert.Equal(Response.Conflict,respons);
 
