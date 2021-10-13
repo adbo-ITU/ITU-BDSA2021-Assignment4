@@ -12,6 +12,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Assignment4.Entities.Tests
 {
+    [Collection("Sequential")]
     public class UserRepositoryTests
     {
         private readonly KanbanContext _context;
@@ -26,9 +27,9 @@ namespace Assignment4.Entities.Tests
          
          var connectionString = configuration.GetConnectionString("bdsa-kanban");
          var optionsBuilder = new DbContextOptionsBuilder<KanbanContext>().UseNpgsql(connectionString);
-         var context = new KanbanContext(optionsBuilder.Options);
-         _context.RemoveAllData();
-         _repo = new UserRepository(_context);
+            _context = new KanbanContext(optionsBuilder.Options);
+            _context.RemoveAllData();
+            _repo = new UserRepository(_context);
 
 
   

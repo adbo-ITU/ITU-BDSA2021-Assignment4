@@ -10,6 +10,7 @@ using System.Collections.Generic;
 
 namespace Assignment4.Entities.Tests
 {
+    [Collection("Sequential")]
     public class TaskRepositoryTests : IDisposable
     {
         // private readonly TaskRepository _repo;
