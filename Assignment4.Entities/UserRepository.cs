@@ -43,26 +43,17 @@ namespace Assignment4.Entities
 
         public UserDTO Read(int UserId)
         {
-            throw new System.NotImplementedException();
+           var user = _context.Users.Find(UserId);
+           return user != null ? new UserDTO(user.Id,user.Name,user.Email): null;
         }
 
-        public IReadOnlyCollection<TagDTO> ReadAll()
+        public IReadOnlyCollection<UserDTO> ReadAll()
         {
             throw new System.NotImplementedException();
         }
 
 
         public Response Update(UserUpdateDTO user)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        UserDTO IUserRepository.Read(int userId)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        IReadOnlyCollection<UserDTO> IUserRepository.ReadAll()
         {
             throw new System.NotImplementedException();
         }
