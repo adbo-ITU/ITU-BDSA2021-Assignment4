@@ -49,10 +49,9 @@ namespace Assignment4.Entities
 
         public IReadOnlyCollection<UserDTO> ReadAll()
         {
-            throw new System.NotImplementedException();
+            return _context.Users.Select(user => new UserDTO(user.Id,user.Name,user.Email)).ToList().AsReadOnly();
+
         }
-
-
         public Response Update(UserUpdateDTO user)
         {
             throw new System.NotImplementedException();

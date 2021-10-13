@@ -9,6 +9,7 @@ using Assignment4.Core;
 using System.Collections.Generic;
 using Assignment4.Entities;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using Microsoft.Data.Sqlite;
 
 namespace Assignment4.Entities.Tests
 {
@@ -177,14 +178,10 @@ namespace Assignment4.Entities.Tests
         public void Read_all_useres_with_no_on_db()
         {
             // Arrange
-          
-
             //Act
             var readuser = _repo.ReadAll();
             // Assert
             Assert.Null(readuser);
-
-
         }
 
     }
