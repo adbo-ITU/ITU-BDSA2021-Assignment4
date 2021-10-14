@@ -123,7 +123,7 @@ namespace Assignment4.Entities.Tests
             _context.SaveChanges();
             var id = newUser.Id;
 
-            var expetedeUser = new UserDTO(id, "olga", "ole@itu.dk");
+            var expetedeUser = new UserDTO(id, "ole", "ole@itu.dk");
 
             //Act
             var readuser = _repo.Read(id);
@@ -181,7 +181,7 @@ namespace Assignment4.Entities.Tests
             //Act
             var readuser = _repo.ReadAll();
             // Assert
-            Assert.Null(readuser);
+            Assert.Empty(readuser);
         }
 
     }
